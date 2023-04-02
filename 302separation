@@ -1,0 +1,154 @@
+#!/usr/bin/env python3
+
+import sys
+
+# Create the matix with all the name
+def createMatrix(names, friend) :
+    friends = []
+    for item in friend :
+        network = []
+        for f in item['friends'] :
+            network.append(f)
+        friends.append(network)
+    matrix = []
+    i = 0
+    while i < len(names) :
+        memset = []
+        y = 0
+        while y < len(names) :
+            memset.append(0)
+            y+=1;
+        matrix.append(memset)
+        i+=1;
+    i = 0
+    for item in friends :
+        for f in item :
+            matrix[names.index(f)][names.index(friend[i]["name"])] = 1
+            matrix[names.index(friend[i]["name"])][names.index(f)] = 1
+        i+=1
+    return(matrix)
+
+
+def countWeight(matrix, w, y, x) :
+    i = 0
+    for item in matrix :
+        if (matrix[y][i] != w) :
+            i+=1
+            continue
+        i+=1
+        if (item[x] == 1) :
+            return (w + 1)
+    return (0)
+
+def createNetwork(names, matrix, limit) :
+    w = 1
+    while (w < limit) :
+        for item in matrix :
+            i = 0
+            for f in item :
+                if (matrix.index(item) == i or (f <= w and f != 0)) :
+                    i+=1
+                    continue
+                item[i] = countWeight(matrix, w, matrix.index(item), i)
+                i+=1
+        w+=1
+    return(matrix)
+
+def connectOne(names, matrix, first, second) :
+    w = 1
+    while (matrix[names.index(first)][names.index(second)] == 0) :
+        for item in matrix :
+            i = 0
+            for f in item :
+                if (matrix.index(item) == i or (f <= w and f != 0)) :
+                    i+=1
+                    continue
+                item[i] = countWeight(matrix, w, matrix.index(item), i)
+                i+=1
+        w+=1
+    return(matrix)
+
+
+def main() :
+        if (len(sys.argv) > 2) :
+                file = open(sys.argv[1], "r")
+                lines = file.read().rstrip()
+                tab = lines.split("\n")
+        if (len(sys.argv) < 3 or len(sys.argv) > 4):
+                print("Usage: .... TODO")
+                return(84)
+        peoples = []
+        for i in range(0, len(tab), 1) :
+                duo = tab[i].split(" is ")
+                data = {
+                        'name' : duo[0],
+                        'friends' : [tab[i].split(" with ")[1]]
+                }
+                peoples.append(data)
+        tmp = peoples[:]
+        for i in range(0, len(tmp)) :
+                for j in range(i + 1, len(tmp)) :
+                        if (tmp[i]["name"] == tmp[j]["name"]) :
+                                peoples[i]["friends"] = tmp[i]["friends"] + tmp[j]["friends"]
+                                peoples[i]["name"] = tmp[i]["name"]
+        result = []
+        i = 0
+        same = False
+        for item in peoples:
+                for truc in result :
+                        if item["name"] == truc["name"] :
+                                same = True
+                if (same == False) :
+                        result.append(item)
+                same = False             
+        names = getNames(tab)
+        if (len(sys.argv) == 4) :
+                printSeparation(sys.argv, names, result)
+        else :
+                for item in names :
+                        print(item)
+                print('')
+                matrix = createMatrix(names, result)
+                for item in matrix :
+                        print(*item, sep=' ')
+                print('')
+                network = createNetwork(names, matrix, int(sys.argv[2]))
+                for item in network :
+                        print(*item, sep=' ')
+        return (0)
+
+def checkName(name, tab) :
+        if name in tab :
+                return True
+        return False
+
+def printSeparation(argv, names, result) :
+        first = argv[2]
+        second = argv[3]
+        if (checkName(first, names) is True and checkName(second, names) is True) :
+                if (first == second) :
+                        print("Degree of separation between ", sys.argv[2], " and ", sys.argv[3], ": 0", sep="")
+                else :
+                        matrix = createMatrix(names, result)
+                        network = connectOne(names, matrix, first, second)
+                        sepa = network[names.index(first)][names.index(second)]
+                        print("Degree of separation between ", sys.argv[2], " and ", sys.argv[3], ": ", sepa, sep="")
+                return
+        else :
+                print("Degree of separation between ", sys.argv[2], " and ", sys.argv[3], ": -1", sep="")
+
+def getNames(tab) :
+        names = []
+        for i in range(0, len(tab), 1) :
+                duo = tab[i].split(" is ")
+                names.append(duo[0])
+                names.append(tab[i].split(" with ")[1])
+        names = list(set(names))
+        names.sort()
+        return names
+
+try :
+        if (main() == 84) :
+                exit(84)
+except :
+        exit(84)

@@ -1,0 +1,220 @@
+#!/usr/bin/env python3
+
+from sys import argv
+
+
+class CreateMat():
+    def create(self, size: int) -> list:
+        return [[0 for _ in range(size)] for _ in range(size)]
+
+    def fill(self, matrix: list, elements: list, dependencies: list) -> list:
+
+        for rules in dependencies:
+            for target in rules[-1]:
+                matrix[elements.index(target)][elements.index(rules[0])] = 1
+
+        return matrix
+
+    def print(self, matrix: list) -> None:
+        for raw in matrix:
+            print('[', end='')
+            for i in range(len(raw)):
+                print(raw[i], end='')
+                if i < len(raw) - 1:
+                    print(' ', end='')
+            print(']')
+
+
+class ParseTheList():
+    def __init__(self):
+        self._makefile = None
+
+    def parseInput(self, makefileContent: list) -> (list, list):
+        def getDependecies(makefileContent: str) -> list:
+
+            depencies = []
+
+            for line in makefileContent:
+                if ':' in line:
+                    rule, target = line.split(':')
+                    # Split and clean targets
+                    target = target.split()
+                    while '' in target:
+                        target.remove('')
+                    depencies.append([rule, target])
+            return depencies
+
+        def getElements(makefileContent: str) -> list:
+
+            elements = []
+
+            def cleanLine(line: str) -> str:
+                if line.find(':') != -1:
+                    # print(line)
+                    line = line.replace('\n', '')
+                    line = line.replace(':', '')
+                    line = line.replace('cc -o', '')
+                    line = line.replace('cc -c', '')
+                    return line.lstrip().rstrip()
+                return ""
+
+
+            for line in makefileContent:
+                # print(line)
+                line = cleanLine(line)
+                tmp = line.split()
+                for element in tmp:
+                    if element not in elements:
+                        elements.append(element)
+            # print(elements)
+            elements.sort()
+            return elements
+
+        return getElements(makefileContent), getDependecies(makefileContent)
+
+
+class ReadTheMake():
+    def __init__(self, argv):
+        self._makefile = None
+        self._file = None
+        #
+        self.parseArguments(argv)
+
+    def parseArguments(self, argv: list) -> None:
+        self._makefile = argv[1]
+        if len(argv) == 3:
+            self._file = argv[2]
+
+    def readFiles(self, filename: str) -> list:
+        content = []
+
+        with open(filename) as file: 
+            lines = file.readlines() 
+            for line in lines:
+                line = line.replace('\n', '')
+                content.append(line)
+        # Remove empty elements
+        while '' in content:
+            content.remove('')
+        if len(content) == 0:
+            print("Makefile is empty.")
+            exit(84)
+        return content
+
+    def printRuleDependencies(self, matrix: list, dependencies: list, elements: list) -> None:
+        def findDependencyPath(matrix, elements, rawIndex, dependencies, index):
+            dependencies.append(elements[rawIndex])
+            for i in range(index, len(matrix[rawIndex])):
+                if matrix[rawIndex][i] == 1:
+                    findDependencyPath(matrix, elements, i, dependencies, 0)
+                    return
+
+        def printDependecies(dependencies: list) -> None:
+            for i in range(len(dependencies)):
+                print(dependencies[i], end='')
+                if i < (len(dependencies)-1):
+                    print(" -> ", end='')
+                else:
+                    print()
+        for j in range(len(matrix)):
+            for i in range(len(matrix[j])):
+                if matrix[j][i] == 1:
+                    dependencies = []
+                    findDependencyPath(matrix, elements, j, dependencies, i)
+                    printDependecies(dependencies)
+
+    def printCommands(self, fileContent: str, elements: list, dependencies: list) -> None:
+
+        def getCommands(commands: list, fileContent: str, target: str, dependencies: list) -> None:
+
+            for i in range(len(fileContent)):
+                if ':' in fileContent[i] and fileContent[i+1] not in commands:
+                    rule, currentTarget = fileContent[i].split(':')
+                    if target in currentTarget.split():
+                        commands.append(fileContent[i+1])
+                        getCommands(commands, fileContent, rule, dependencies)
+
+        commands = []
+        getCommands(commands, fileContent, self._file, dependencies)
+        commands.sort()
+
+        if self._file not in elements:
+            print("{} not in {}".format(self._file, self._makefile))
+            exit(84)
+        if len(commands) == 0:
+            print()
+        else:
+            [print(command) for command in commands]
+
+    def run(self) -> None:
+        parser = ParseTheList()
+        fileContent = self.readFiles(self._makefile)
+        elements, depedencies = parser.parseInput(fileContent)
+
+        matrix = CreateMat()
+        m = matrix.create(len(elements))
+        m = matrix.fill(m, elements, depedencies)
+
+        if self._file is None:
+            matrix.print(m)
+            print()
+            self.printRuleDependencies(m, depedencies, elements)
+        else:
+            self.printCommands(fileContent, elements, depedencies)
+
+
+class CheckArg():
+    def checkArgs(self, argv) -> int:
+        def isFile(filename: str) -> bool:
+            try:
+                f = open(filename)
+            except IOError:
+                print("{} is not a valid file.".format(filename))
+                return False
+            else:
+                f.close()
+                return True
+
+        if len(argv) != 2 and len(argv) != 3:
+            print("Wrong number of arguments.")
+            return 84
+        elif not isFile(argv[1]):
+            return 84
+        else:
+            return 0
+
+    def needHelp(self, argv) -> bool:
+        if "-h" in argv or "--help" in argv:
+            return True
+        return False
+
+
+class HTU():
+
+    def __init__(self):
+        self.show()
+
+    def show(self) -> None:
+        print(
+            "USAGE\n"
+            "\t./303make makefile [file]\n"
+            "DESCRIPTION\n"
+            "\tmakefile\tname of the makefile\n"
+            "\tfile\t\tname of a recently modified file"
+            )
+
+
+def main():
+
+    argsManager = CheckArg()
+
+    if argsManager.needHelp(argv):
+        HTU()
+    elif argsManager.checkArgs(argv) == 84:
+        exit(84)
+    else:
+        ReadTheMake(argv).run()
+
+
+if __name__ == "__main__":
+    main()
