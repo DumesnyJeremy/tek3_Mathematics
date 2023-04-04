@@ -20,6 +20,24 @@ The following interdisciplinary skills will also be taken into account during th
 Once these skills have been acquired, a grade assignment (from A to D) will, above all, depend on your implication in this unit. From A: very involved, to D: very little involvement.
 
 ## PDF of the projects
+[B-MAT-400_201yams.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154029/B-MAT-400_201yams.pdf)
+
+[B-MAT-400_202unsold.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154028/B-MAT-400_202unsold.pdf)
+
+[B-MAT-400_203hotline.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154036/B-MAT-400_203hotline.pdf)
+
+[B-MAT-400_204ducks.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154035/B-MAT-400_204ducks.pdf)
+
+[B-MAT-400_205IQ.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154034/B-MAT-400_205IQ.pdf)
+
+[B-MAT-400_206neutrinos.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154033/B-MAT-400_206neutrinos.pdf)
+
+[B-MAT-400_207demography.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154032/B-MAT-400_207demography.pdf)
+
+[B-MAT-400_208dowels.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154031/B-MAT-400_208dowels.pdf)
+
+[B-MAT-400_209poll.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154030/B-MAT-400_209poll.pdf)
+
 [B-MAT-500_301dannon.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11131057/B-MAT-500_301dannon.pdf)
 
 [B-MAT-500_302separation.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11131058/B-MAT-500_302separation.pdf)
