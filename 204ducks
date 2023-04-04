@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+
+import  sys
+import  math
+
+def man_help():
+    print("USAGE")
+    print("\t./204ducks a\n")
+    print("DESCRIPTION")
+    print("\ta\tconstant")
+
+def get_proba(a, x, mode = 0):
+    return -a * math.exp(-x) - (4 - 3 * a) / 2 * math.exp(-2 * x) - (2 * a - 4) / 4 * math.exp(-4 * x) if mode == 0 else a * math.exp(-x) + (4 - 3 * a) * math.exp(-2 * x) + (2 * a - 4) * math.exp(-4 * x)
+
+def f_time(a):
+    res = float(0)
+    x = float(0)
+    while x < 10:
+        res += get_proba(a, x, 1) * x / 1000
+        x += 0.001
+    return res
+
+def std_dev(a, full_time):
+    res = float(0)
+    x = float(0)
+    while x < 100:
+        res += pow(x - full_time, 2) * get_proba(a, x, 1) / 1000
+        x += 0.001
+    res = math.sqrt(res)
+    return res
+
+def p_are_back(a, percent):
+    x = 0.0
+    while x < 1000:
+        if get_proba(a,x/60) - get_proba(a,0) >= percent:
+            return x
+        x += 0.002
+    raise ValueError("Too mutch")
+
+def print_res(a):
+    if a == None:
+        raise BaseException("invalid number (0 <= a <= 2.5)")
+    full_time = f_time(a)
+    standard_deviation = std_dev(a, full_time)
+    p_50 = p_are_back(a, 0.5)
+    p_99 = p_are_back(a, 0.99)
+    first_duck = (get_proba(a, 1) - get_proba(a, 0)) * 100
+    scd_duck = (get_proba(a, 2) - get_proba(a, 0)) * 100
+    print("Average return time: " + str(int(full_time))
+          + "m " + "%ds" % math.ceil((full_time - int(full_time)) * 60))
+    print("Standard deviation: " + "%.3f" % standard_deviation)
+    print("Time after which 50%% of the ducks are back: %dm %d%ds" % (p_50 / 60, p_50 % 60 / 10, p_50 % 10))
+    print("Time after which 99%% of the ducks are back: %dm %d%ds" % (p_99 / 60, p_99 % 60 / 10, p_99 % 10))
+    print("Percentage of ducks back after 1 minute: %.1f%%" % first_duck)
+    print("Percentage of ducks back after 2 minutes: %.1f%%" % scd_duck)
+
+def     main():
+    try:
+        if len(sys.argv) == 2:
+            if sys.argv[1] == "-h":
+                man_help()
+            else:
+                print_res(float(sys.argv[1]) if float(sys.argv[1]) >= 0 and float(sys.argv[1]) <= 2.5 else None)
+        else:
+            raise BaseException("invalid argument's number")
+    except BaseException as error:
+        sys.stdout.write(str(type(error).__name__) + ": {}\n".format(error))
+        sys.exit(84)
+
+if __name__ == "__main__":
+    main()

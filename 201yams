@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+
+import sys
+import math
+
+#  golobal vayables
+cmb = list
+arrDie = [int]
+
+def displayHelp():
+    print("USAGE\n",
+          "    ./201yams d1 d2 d3 d4 d5 c\n\n",
+          "DESCRIPTION\n",
+          "    d1    value of the first die (0 if not thrown)\n",
+          "    d2    value of the second die (0 if not thrown)\n",
+          "    d3    value of the third die (0 if not thrown)\n",
+          "    d4    value of the fourth die (0 if not thrown)\n",
+          "    d5    value of the fifth die (0 if not thrown)\n",
+          "    c    expected combinatio",
+          )
+
+
+def getBinom(a: int, b: int):
+    return (math.factorial(a) / (math.factorial(b) * math.factorial(a - b))) * \
+            math.pow((1.0 / 6.0), b) * math.pow((5.0 / 6.0), (a - b)) * 100
+
+def calFull():
+    res, n1, n2 = 0, arrDie.count(int(cmb[1])), arrDie.count(int(cmb[2]))
+
+    if n1 == 3 and n2 == 2:
+        res = 1
+    else:
+        if (n1 > 3):
+            n1 = 3
+        if (n2 > 2):
+            n2 = 2
+        pair   = math.factorial(5 - n1 - n2) / (math.factorial(3 - n2) * math.factorial((5 - n2 - n1) - (3 - n1)))
+        brelan = math.factorial(2 - n2) / (math.factorial(2 - n2) * math.factorial((2 - n2) - (2 - n2)))
+        res = (pair * brelan) / 6**(5 - n1 - n2)
+    print("Chances to get a " + str(cmb[1]) + " " + "full: %0.2f%%" %(res * 100))
+
+def calStraight():
+    res = 0
+    tab = set(arrDie)
+    if (cmb[1] == 5):
+        for i in range(1, 6):
+            if i in tab:
+                res += 1
+    elif (cmb[1] == 6):
+        for i in range(2, 7):
+            if i in tab:
+                res += 1
+    if (res == 5):
+        print("Chances to get a " + str(cmb[1]) + " " + "straight: %0.2f%%" %(100))
+    else:
+        print("Chances to get a " + str(cmb[1]) + " " + "straight: %0.2f%%" %((math.factorial(5 - res) / 6**(5 - res)) * 100))
+
+
+def calNormalDie(comb: int):
+    res = 0
+    numOc = arrDie.count(cmb[1])
+    for n in range(comb - numOc, 6 - numOc):
+        res += getBinom(5 - numOc, n)
+    if comb == 2 or comb == 5:
+        print("Chances to get a " + str(cmb[1]) + " " + cmb[0] + ": %0.2f%%" %(res))
+    else:
+        print("Chances to get a " + str(cmb[1]) + " " + cmb[0] + "-of-a-kind" + ": %0.2f%%" %(res))
+
+
+def calcul():
+    if (cmb[0] == "pair"):
+        calNormalDie(2)
+    elif (cmb[0] == "three"):
+        calNormalDie(3)
+    elif (cmb[0] == "four"):
+        calNormalDie(4)
+    elif (cmb[0] == "yams"):
+        calNormalDie(5)
+    elif (cmb[0] == "straight"):
+        calStraight()
+    elif (cmb[0] == "full"):
+        calFull()
+
+
+#  functions for checkerros
+def argsToIntegerNum(num: str):
+    try:
+        return int(num)
+    except ValueError:
+        print("Invalid parameters")
+        exit(84)
+
+
+def isInvalidNumDie(num: int) -> bool:
+    if num < 0 or num > 6:
+        return True
+    return False
+
+
+def argsHaveError() -> bool:
+    for i in range(1, len(sys.argv) - 1):
+        if isInvalidNumDie(argsToIntegerNum(sys.argv[i])):
+            return True
+        arrDie.append(int(sys.argv[i]))
+    global cmb
+    cmb = sys.argv[6].split('_')
+    if len(cmb) <= 1 or len(cmb) > 3:
+        return True
+    for i in range(1, len(cmb)):
+        if isInvalidNumDie(argsToIntegerNum(cmb[i])):
+            return True
+        cmb[i] = argsToIntegerNum(cmb[i])
+
+    combin = ["pair", "three", "four", "yams", "straight"]
+    if (len(cmb) == 2):
+        j, l = 0, len(combin)
+        while (j < l):
+            if cmb[0] == combin[j]:
+                break
+            j += 1
+        if (j == 5): return True
+        if (j == 4 and cmb[1] != 5 and cmb[1] != 6):
+            return True
+    elif cmb[0] != "full" or cmb[1] == cmb[2]:
+            return True
+    return False
+
+
+def main():
+    ac = len(sys.argv)
+    if ac == 2 and sys.argv[1] == "-h":
+        displayHelp()
+    elif ac == 7:
+        if argsHaveError():
+            exit(84)
+        calcul()
+    else:
+        exit(84)
+
+
+if __name__ == "__main__":
+    main()

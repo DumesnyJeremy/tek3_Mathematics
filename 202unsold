@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+
+import sys
+import math
+
+
+def displayHelp():
+    print("USAGE\n"
+          "    ./202unsold a b\n\n"
+          "DESCRIPTION\n"
+          "    a      constant computed from the past results\n"
+          "    b      constant computed from the past results"
+          )
+
+
+def calculSold(x, y, a, b):
+    result = ((a - x) * (b - y)) / ((5 * a - 150) * (5 * b - 150))
+    return result
+
+
+def getTab(a: int, b: int) -> [float]:
+    tab = [[float(calculSold((x + 1) * 10, (y + 1) * 10, a, b))
+                  for x in range(5)] for y in range(5)]
+    return tab
+
+
+def printTablaw(tab: [float], a: int, b: int):
+    print("------------------------------------------------------")
+    print("\tX=10\tX=20\tX=30\tX=40\tX=50\tY law")
+    for i in range(len(tab)):
+        print("Y=" + str((i + 1) * 10), end='\t')
+        print("%.3f\t"*len(tab[i]) % tuple(tab[i]), end='')
+        print("%.3f" % sum(tab[i]))
+    print("X law", end='')
+    for x in range(len(tab)):
+        somm = 0.0
+        for y in range(len(tab[x])):
+            somm += tab[y][x]
+        print("\t%0.3f" %(somm), end='')
+    print("\t%0.3f" %(1))
+
+def printSomeZ(tab: [float], a: int, b: int):
+    print("------------------------------------------------------")
+    print("z\t20\t30\t40\t50\t60\t70\t80\t90\t100\np(Z=z)", end='')
+    summ = 0.0
+    for z in range(2, 11):
+        summ = 0.0
+        for y in range(len(tab)):
+            for x in range(len(tab[y])):
+                if ((x+1) + (y+1) == z):
+                    summ += tab[y][x]
+        print("\t%0.3f" %(summ), end='')
+
+def printExpected(tab:[float], a:int, b:int):
+    print("\n------------------------------------------------------")
+    tabSomY = [sum(tab[i]) for i in range(len(tab))]
+    tabSomX = []
+    totalX, totalY, somX, somY = 0.0, 0.0, 0.0, 0.0
+
+    for x in range(len(tab)):
+        somm = 0.0
+        for y in range(len(tab[x])):
+            somm += tab[y][x]
+        tabSomX.append(somm)
+    # print(tabSomX)
+    # print(tabSomY)
+    # print(len(tabSomX))
+    # print(len(tabSomY))
+    
+    for i in range(0, 5):
+        totalX += tabSomX[i] * ((i + 1) * 10)
+        totalY += tabSomY[i] * ((i + 1) * 10)
+    for i in range(0, 5):
+        somX += ((i + 1) * 10 - totalX) * ((i + 1) * 10 - totalX) * tabSomX[i]
+        somY += ((i + 1) * 10 - totalY) * ((i + 1) * 10 - totalY) * tabSomY[i]
+    print("expected value of X:\t" + "%0.1f" %(totalX))
+    print("variance of X:\t\t" + "%0.1f" %(somX))
+    print("expected value of Y:\t" + "%0.1f" %(totalY))
+    print("variance of Y:\t\t" + "%0.1f" %(somY))
+    print("expected value of Z:\t" + "%0.1f" %(totalX + totalY))
+    print("variance of Z:\t\t" + "%0.1f" %(somX + somY))
+    print("------------------------------------------------------")
+
+def argsToIntegerNum(num: str):
+    try:
+        return int(num)
+    except ValueError:
+        sys.stderr.write("Invalid parameters")
+        exit(84)
+
+
+def argsHaveError() -> bool:
+    a = argsToIntegerNum(sys.argv[1])
+    b = argsToIntegerNum(sys.argv[2])
+    if a <= 50 or b <= 50:
+        sys.stdout.write("number must graten 50\n")
+        exit(84)
+
+
+def main():
+    ac = len(sys.argv)
+    if ac == 2 and sys.argv[1] == "-h":
+        displayHelp()
+    elif ac == 3:
+        if argsHaveError():
+            exit(84)
+        a = argsToIntegerNum(sys.argv[1])
+        b = argsToIntegerNum(sys.argv[2])
+        tab = getTab(a, b)
+        printTablaw(tab, a, b)
+        printSomeZ(tab, a, b)
+        printExpected(tab, a, b)
+
+    else:
+        sys.stderr.write("Invalid parameters plase use -h to see the help")
+        exit(84)
+
+
+if __name__ == "__main__":
+    main()
