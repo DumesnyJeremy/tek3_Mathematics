@@ -1,4 +1,18 @@
 ## Module description
+### 2nd Year
+Probablilty and Statistics Unit.
+
+This unit is the continuation of the units from B1 and B2. The skills required to validate the first two units need to have been acquired. You must be able to create algorithms by using mathematical methods, and be at ease with graphic tools (plotting different kinds of curves).    
+
+SUBJECTS COVERED:
+The unit consists of two sections: 5 probability projects and 4 statistics projects. 
+1° Probability: random experiment, events, probability, random variables and a few famous discrete or continuous variable laws. 
+2° Statistics: descriptive statistics, statistic adjustments, correlation, survey sampling.
+
+You must be familiar with the fundamentals of probability and master several classic statistics methods. 
+You will be evaluated through the completion of 9 mini-projects
+
+### 3rd Year
 Operations Research Unit
 Advanced scientific calculation algorithms
 
@@ -8,6 +22,15 @@ SUBJECTS COVERED:
 The concept of the complexity of algorithms, graph theory, linear systems and programs and interpolation.
 
 ## Skills to acquire
+### 2nd Year
+There are two types of skills required to validate the B4 unit:
+
+1° mastery of more complex scientific computing algorithms (formula decoding, combinatorial computing analysis, without intermediate storage in memory...)
+2° ability to manage complicated numerical calculations, which requires a good, preexisting comprehension and intelligent implementation (descriptive statistics parameters, correlation parameters, expected value and variance with numerical integration...). 
+
+Interdisciplinary skills are taken into account for validating the unit: precision, seriousness, punctuality, professional behavior.
+
+### 3rd Year
 You must demonstrate that you are familiar with, and know how to, apply complex mathematical algorithms. 
 You will be evaluated on the completion of 9 mini-projects.
 
@@ -20,6 +43,7 @@ The following interdisciplinary skills will also be taken into account during th
 Once these skills have been acquired, a grade assignment (from A to D) will, above all, depend on your implication in this unit. From A: very involved, to D: very little involvement.
 
 ## PDF of the projects
+### 2nd Year
 [B-MAT-400_201yams.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154029/B-MAT-400_201yams.pdf)
 
 [B-MAT-400_202unsold.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154028/B-MAT-400_202unsold.pdf)
@@ -37,6 +61,7 @@ Once these skills have been acquired, a grade assignment (from A to D) will, abo
 [B-MAT-400_208dowels.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154031/B-MAT-400_208dowels.pdf)
 
 [B-MAT-400_209poll.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11154030/B-MAT-400_209poll.pdf)
+### 3rd Year
 
 [B-MAT-500_301dannon.pdf](https://github.com/DumesnyJeremy/tek3_Mathematics/files/11131057/B-MAT-500_301dannon.pdf)
 
